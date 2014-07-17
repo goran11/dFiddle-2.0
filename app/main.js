@@ -15,7 +15,7 @@
     }
 });
 
-define(['durandal/system', 'durandal/app', 'durandal/viewLocator'], function( system, app, viewLocator ) {
+define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'services/BccTemplateEngine'], function( system, app, viewLocator, bccTemplateEngine ) {
     //>>excludeStart("build", true);
     system.debug(true);
     //>>excludeEnd("build");
@@ -27,7 +27,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator'], function( sy
         router: true,
         dialog: true,
         widget: {
-            kinds: ['expander']
+            kinds: ['expander', 'grid']
         }
     });
 
