@@ -1,3 +1,4 @@
+<div data-part="header-templates"></div>
 <div data-part="cell-templates"></div>
 
 <table>
@@ -13,21 +14,32 @@
 <table data-bind="css: gridClasses" class="searchTable">
     <thead class="grid-columns" data-part="header">
         <tr class="grid-column" data-part="headerRow" data-bind="foreach: columns">
-            <th class="grid-header-cell" data-bind="click: $parent.setSortColumn">
+		
+			<!-- ko ifnot: $parent.getUserHeaderTemplate($data) -->
+            <th class="grid-header-cell" data-bind="click: $parent.setSortColumn, 
+													attr: { style: $parent.getUserHeaderTemplateStyle($data), class: $parent.getUserHeaderTemplateClass($data) }">
                 <span data-bind="text: header"></span>
                 <!-- ko if: $data == $parent.sortColumn() -->
                 <i class="fa fa-sort-desc" data-bind="css: { 'fa-sort-desc': $parent.sortDesc(), 'fa-sort-asc': !$parent.sortDesc() }"></i>
                 <!-- /ko -->
             </th>
+			<!-- /ko -->
+			<!-- ko if: $parent.getUserHeaderTemplate($data) -->
+			<th data-bind="click: $parent.setSortColumn, 
+						   template: { name: $parent.getUserHeaderTemplate($data), data: { model: $parent.getModel(), data: $data.header, column: $data, grid: $parent } },
+						   attr: { style: $parent.getUserHeaderTemplateStyle($data), class: $parent.getUserHeaderTemplateClass($data) }"></th>
+			<!-- /ko -->
         </tr>
     </thead>
     <tbody class="grid-body" data-bind="foreach: { data: rows, as: 'row' }" data-part="body">
         <tr data-bind="foreach: $parent.columns,  click: $parent.rowClick, css: { 'rowActive' : $parent.rowSelected($data)}">
             <!-- ko ifnot: $parents[1].getUserCellTemplate($data) -->
-            <td data-bind="text: $parents[1].getColumnText($data, row)"></td>
+            <td data-bind="text: $parents[1].getColumnText($data, row),
+						   attr: { style: $parents[1].getUserCellTemplateStyle($data), class: $parents[1].getUserCellTemplateClass($data) }"></td>
             <!-- /ko -->
             <!-- ko if: $parents[1].getUserCellTemplate($data) -->
-            <td data-bind="template: { name: $parents[1].getUserCellTemplate($data), data: { model: $parents[1].getModel(), data: $parents[1].getColumnText($data, row), row: row, grid: $parents[1] } }"></td>
+            <td data-bind="template: { name: $parents[1].getUserCellTemplate($data), data: { model: $parents[1].getModel(), data: $parents[1].getColumnText($data, row), row: row, grid: $parents[1] } },
+						   attr: { style: $parents[1].getUserCellTemplateStyle($data), class: $parents[1].getUserCellTemplateClass($data) }"></td>
             <!-- /ko -->
         </tr>
     </tbody>

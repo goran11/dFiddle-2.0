@@ -64,3 +64,14 @@ input.invalid { border: 1px solid red !important; background-color: #FFAAAA !imp
 
 .configuration select { height: 1.7em; }
 .configuration button { height: 2em; }
+
+/*-----------------------------Moje-------------------*/
+.rowActive {
+    color: red;
+    font-weight: bold;
+}
+
+
+
+
+

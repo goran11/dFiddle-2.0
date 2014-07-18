@@ -1,15 +1,50 @@
 
 <div data-bind="grid: gridConfig">
-	<div data-part="cell-templates">
-		<script type="text/html" data-col="Opis">
-			<input type="text" data-bind="value: data" />
+
+	<!-- Definicije template-a za headere -->
+	<div data-part="header-templates">
+	
+		<!-- Kako zamjeniti defaultni template headera, zajedno sa ikonom koja pokazuje sortiranost kolone -->
+		<script type="text/html" data-col="Sifra">
+				<div style="background-color: purple; padding: 10px">
+					<span style="border: 1px solid white; color: white; font-size: 18px;" data-bind="text: data"></span>
+					<!-- ko if: column == grid.sortColumn() -->
+					<i class="fa fa-sort-desc" data-bind="css: { 'fa-sort-desc': grid.sortDesc(), 'fa-sort-asc': !grid.sortDesc() }"></i>
+					<!-- /ko -->
+				</div>
 		</script>
+		
+		<!-- Postavlja samo stil na header, koristi se defaultni template -->
+		<script type="text/html" data-col="Opis" style="width: 400px; text-align: left; padding-left: 30px;"></script>
+		
+		<!-- Postavlja samo stil na header, koristi se defaultni template -->
+		<script type="text/html" data-col="Baza" style="width: 100; text-align: right; padding-right: 50px;"></script>
+	</div>
+
+
+	<!-- Definicije template-a za æelije -->
+	<div data-part="cell-templates">
+	
+		<!-- Osnovna definicija template-a -->
+		<script type="text/html" data-col="Opis" style="width: 400px; text-align: left; padding-left: 30px;">
+			<span data-bind="text: data"></span>
+		</script>
+		
+		<!-- Ne definiramo tijelo template-a (sadržaj script elementa je prazan što znaèi da æe se koristiti defaultni template),
+			 ali koristimo definiciju da bi postavili stil na æeliju (na isti naèin se može postaviti i css klasa) -->
+		<script type="text/html" data-col="Baza" style="width: 100x; text-align: right; padding-right: 50px;"></script>
+		
+		<!-- Gumb/ikona prikazuje detalje retka na naèin da se databinda na trenutni viewmodel koji dobiva u obliku varijable "model"  -->
 		<script type="text/html" data-col="__details">
 			<input data-bind="click: function() { model.showData(row); }" 
 				type="image" style="width: 20px; height: 20px" 
 				src="http://findicons.com/icon/download/67001/gnome_text_x_generic/64/png" />
 		</script>
-		<script type="text/html" data-col="__checked">
+		
+		<!-- Checkbox za selektiranje redaka -->
+		<script type="text/html" data-col="__checked" 
+				style="width: 100px; text-align: center;",
+				class="moja-klasa">
 			<input type="checkbox" data-bind="checkEntityInArray: grid.selectedRows, entity: row" />
 		</script>
 		

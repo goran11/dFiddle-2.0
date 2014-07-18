@@ -71,9 +71,20 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
     var Grid = function (config) {
         var self = this;
 
+		var userHeaderTemplatesElement = null;//Ako je korisnik definirao template za headere
+		var userHeaderTemplatesCache = {};
+		var userHeaderTemplatesStylesCache = {};
+		var userHeaderTemplatesClassesCache = {};
+		
+		
         var userCellTemplatesElement = null;//Ako je korisnik definirao template za æelije
-        var userCellTemplates = {};
+        var userCellTemplatesCache = {};
+		var userCellTemplatesStylesCache = {};
+		var userCellTemplatesClassesCache = {};
+		
+		
 
+		
         self.allRows = ko.isObservable(config.data) ? config.data : ko.observableArray(config.data || []);
 
         self.columns = ko.computed(function () {
@@ -320,15 +331,15 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 
 
         self.binding = function (child, parent, settings) {
+			userHeaderTemplatesElement = $(child).find('[data-part="header-templates"]')[0];
             userCellTemplatesElement = $(child).find('[data-part="cell-templates"]')[0];
         };
 
-        self.getUserCellTemplate = function (column) {
+		self.getUserHeaderTemplate = function (column) {
+			var prop = column.property;
 
-            var prop = column.property;
-
-            var tmpl = userCellTemplates[prop];
-            //1. Pogledaj u cached objektu, da ne tražimo bezveze svaki put
+			//1. Pogledaj u cached objektu, da ne tražimo po elementima bezveze svaki put (100 redaka = 100 traženja )
+            var tmpl = userHeaderTemplatesCache[prop];
             if (tmpl == 'no template') {
                 return null;
             }
@@ -336,20 +347,152 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
                 return tmpl;
             }
 
-            //2. Dohvati template sa JQuery-jem i cachiraj ga
-            var $tmpElement = $(userCellTemplatesElement).find('[data-col="' + prop + '"]');
+            //2. Traži i dohvati template sa JQuery-jem i cachiraj ga
+            var $tmpElement = $(userHeaderTemplatesElement).find('[data-col="' + prop + '"]');
             if ($tmpElement.length > 0) {
-                userCellTemplates[prop] = $tmpElement.html();
-                return userCellTemplates[prop];
+				var html = $tmpElement.html();
+				if(html) {
+					userHeaderTemplatesCache[prop] = $tmpElement.html();
+					return html;
+				}
+				else {
+					userHeaderTemplatesCache[prop] = 'no template';
+					return null;
+				}
             }
             else {
-                userCellTemplates[prop] = 'no template';
+                userHeaderTemplatesCache[prop] = 'no template';
+                return null;
+            }
+		};
+		
+		self.getUserHeaderTemplateStyle = function(column) {
+			var prop = column.property;
+			var style = userHeaderTemplatesStylesCache[prop];
+            //1. Pogledaj u cached objektu, da ne tražimo bezveze svaki put
+            if (style == 'no style') {
+                return '';
+            }
+            else if (style) {
+                return style;
+            }
+			
+			 //2. Dohvati template sa JQuery-jem i cachiraj ga
+            var $tmpElement = $(userHeaderTemplatesElement).find('[data-col="' + prop + '"]');
+            if ($tmpElement.length > 0) {
+                userHeaderTemplatesStylesCache[prop] = $tmpElement.attr('style');
+                return userHeaderTemplatesStylesCache[prop];
+            }
+            else {
+                userHeaderTemplatesStylesCache[prop] = 'no style';
+                return '';
+            }
+		};
+		
+		self.getUserHeaderTemplateClass = function(column) {
+			var prop = column.property;
+			var cls = userHeaderTemplatesClassesCache[prop];
+            //1. Pogledaj u cached objektu, da ne tražimo bezveze svaki put
+            if (cls == 'no class') {
+                return '';
+            }
+            else if (cls) {
+                return cls;
+            }
+			
+			 //2. Dohvati template sa JQuery-jem i cachiraj ga
+            var $tmpElement = $(userHeaderTemplatesElement).find('[data-col="' + prop + '"]');
+            if ($tmpElement.length > 0) {
+                userHeaderTemplatesClassesCache[prop] = $tmpElement.attr('class');
+                return userHeaderTemplatesClassesCache[prop];
+            }
+            else {
+                userHeaderTemplatesClassesCache[prop] = 'no class';
+                return '';
+            }
+		};
+		
+        self.getUserCellTemplate = function (column) {
+
+            var prop = column.property;
+
+			//1. Pogledaj u cached objektu, da ne tražimo po elementima bezveze svaki put (100 redaka = 100 traženja )
+            var tmpl = userCellTemplatesCache[prop];
+            if (tmpl == 'no template') {
+                return null;
+            }
+            else if (tmpl) {
+                return tmpl;
+            }
+
+            //2. Traži i dohvati template sa JQuery-jem i cachiraj ga
+            var $tmpElement = $(userCellTemplatesElement).find('[data-col="' + prop + '"]');
+            if ($tmpElement.length > 0) {
+				var html = $tmpElement.html();
+				if(html) {
+					userCellTemplatesCache[prop] = $tmpElement.html();
+					return html;
+				}
+				else {
+					userCellTemplatesCache[prop] = 'no template';
+					return null;
+				}
+            }
+            else {
+                userCellTemplatesCache[prop] = 'no template';
                 return null;
             }
         };
 
+		self.getUserCellTemplateStyle = function(column) {
+			var prop = column.property;
+			var style = userCellTemplatesStylesCache[prop];
+            //1. Pogledaj u cached objektu, da ne tražimo bezveze svaki put
+            if (style == 'no style') {
+                return '';
+            }
+            else if (style) {
+                return style;
+            }
+			
+			 //2. Dohvati template sa JQuery-jem i cachiraj ga
+            var $tmpElement = $(userCellTemplatesElement).find('[data-col="' + prop + '"]');
+            if ($tmpElement.length > 0) {
+                userCellTemplatesStylesCache[prop] = $tmpElement.attr('style');
+                return userCellTemplatesStylesCache[prop];
+            }
+            else {
+                userCellTemplatesStylesCache[prop] = 'no style';
+                return '';
+            }
+		};
+		
+		self.getUserCellTemplateClass = function(column) {
+			var prop = column.property;
+			var cls = userCellTemplatesClassesCache[prop];
+            //1. Pogledaj u cached objektu, da ne tražimo bezveze svaki put
+            if (cls == 'no class') {
+                return '';
+            }
+            else if (cls) {
+                return cls;
+            }
+			
+			 //2. Dohvati template sa JQuery-jem i cachiraj ga
+            var $tmpElement = $(userCellTemplatesElement).find('[data-col="' + prop + '"]');
+            if ($tmpElement.length > 0) {
+                userCellTemplatesClassesCache[prop] = $tmpElement.attr('class');
+                return userCellTemplatesClassesCache[prop];
+            }
+            else {
+                userCellTemplatesClassesCache[prop] = 'no class';
+                return '';
+            }
+		}
+
+		
         self.getModel = function () {
-            if (!userCellTemplates) return null;
+            if (!userCellTemplatesElement) return null;
             var ctx = ko.contextFor(userCellTemplatesElement);//Kontekst od grida (glavni VM je ova klasa)
             return ctx.$parent;//Vrati prvog parenta
         };
