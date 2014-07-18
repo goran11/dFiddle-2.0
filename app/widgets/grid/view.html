@@ -27,7 +27,7 @@
             <td data-bind="text: $parents[1].getColumnText($data, row)"></td>
             <!-- /ko -->
             <!-- ko if: $parents[1].getUserCellTemplate($data) -->
-            <td data-bind="template: { name: $parents[1].getUserCellTemplate($data), data: { model: $parents[1].getModel(), data: $parents[1].getColumnText($data, row), row: row } }"></td>
+            <td data-bind="template: { name: $parents[1].getUserCellTemplate($data), data: { model: $parents[1].getModel(), data: $parents[1].getColumnText($data, row), row: row, grid: $parents[1] } }"></td>
             <!-- /ko -->
         </tr>
     </tbody>

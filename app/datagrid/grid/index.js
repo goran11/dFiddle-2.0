@@ -37,7 +37,8 @@ define(function (require) {
                 { header: 'Code', property: 'Sifra', canSearch: true, canSort: true, sort: function(a, b) { return a.Sifra < b.Sifra ? -1 : 1; } },
                 { header: 'Description', property: 'Opis', canSearch: true, canSort: true, sort: function (a, b) { return a.Opis < b.Opis ? -1 : 1; } },
                 { header: 'Base', property: 'Baza', canSearch: true, canSort: true, sort: function (a, b) { return a.Baza < b.Baza ? -1 : 1; } },
-				{ header: '', property: '__details', canSearch: false, canSort: false }
+				{ header: '', property: '__details' },
+				{ header: '', property: '__checked' }
             ],
             rowClick: function(data) {
                 //app.closeDialog(self, data);

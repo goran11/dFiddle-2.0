@@ -15,7 +15,7 @@
     }
 });
 
-define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'services/BccTemplateEngine'], function( system, app, viewLocator, bccTemplateEngine ) {
+define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'services/BccTemplateEngine', 'services/knockoutBindingHandlers'], function( system, app, viewLocator, bccTemplateEngine, bindingHandlers ) {
     //>>excludeStart("build", true);
     system.debug(true);
     //>>excludeEnd("build");

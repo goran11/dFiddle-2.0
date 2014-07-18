@@ -60,6 +60,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
         alwaysShowPaging: false,
         showPageSizeOptions: false,
         selectedRows: [],
+        selectRowOnClick: true,
         multiSelect: false,
         identifierProperty: '',
         pageText: 'Page',
@@ -92,9 +93,10 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
         };
 
         
-
+        self.selectRowOnClick = config.selectRowOnClick !== undefined ? config.selectRowOnClick : defaults.selectRowOnClick;
         self.identifierProperty = config.identifierProperty !== undefined ? config.identifierProperty : defaults.identifierProperty;
         self.multiSelect = config.multiSelect !== undefined ? config.multiSelect : defaults.multiSelect;
+
 
         self.selectedRows = ko.isObservable(config.selectedRows)
 			? config.selectedRows
@@ -113,15 +115,17 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
         // action handlers
         //
         self.rowClick = function (data) {
-            if (self.selectedRows.indexOf(data) < 0) {
-                if (!self.multiSelect) {
-                    self.selectedRows.removeAll();
-                }
-                self.selectedRows.push(data);
-            } else {
-                self.selectedRows.remove(data);
-            }
 
+            if (self.selectRowOnClick) {//Ako je postavljena opcija da na klik na redak automatski odaberemo redak
+                if (self.selectedRows.indexOf(data) < 0) {
+                    if (!self.multiSelect) {
+                        self.selectedRows.removeAll();
+                    }
+                    self.selectedRows.push(data);
+                } else {
+                    self.selectedRows.remove(data);
+                }
+            }
 
             if ($.isFunction(config.rowClick)) {
                 config.rowClick(data, self.selectedRows());
@@ -350,7 +354,6 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
             return ctx.$parent;//Vrati prvog parenta
         };
 
-
         self.compositionComplete = function (view, parent) {
             var classes = parent.className;
             if (classes && classes.length > 0 && self.stealClasses) {
@@ -359,6 +362,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
                     parent.className = '';
             }
         };
+
     };
 
     return function GridWidget() {
