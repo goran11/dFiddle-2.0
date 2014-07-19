@@ -8,4 +8,4 @@ Izrada i dorade widgeta za Durandal
 
 Dorada grid-a "Durandal Grid 2.0.0 by Timothy Moran" - https://github.com/tyrsius/durandal-grid for details.
 
-	- Dodana podrška za template na nivou æelija i headera
+	- Dodana podrÅ¡ka za template na nivou Ä‡elija i headera
