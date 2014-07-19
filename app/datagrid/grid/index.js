@@ -1,22 +1,21 @@
 define(function (require) {
 
     var ko = require('knockout');
-    //var app = require('durandal/app');
-
+	var $ = require('jquery');
+	
+	
+	function htmlEncode(html) {
+		return String(html)
+			.replace(/&/g, '&amp;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
+	}
+	
     var instanca = function () {
         var self = this;
         self.activate = function (activationData) {
-            //self.isLoading(true);
-            //self.gridConfig.selectedRows = ko.observableArray();
-            
-            
-            //var dataArray = [];
-
-            //sifrarnici.geSifrarnikByName(sifrarnik).then(function (data) {
-            //    dataArray = data.slice(); //kopiramo polje
-            //    self.gridConfig.data(dataArray);
-            //    self.isLoading(false);
-            //});
 			self.gridConfig.data([
 				{ Sifra: '001', Opis: 'Rafinerija Rijeka', Baza: 'Rijeka'},
 				{ Sifra: '002', Opis: 'Rafinerija Split', Baza: 'Split'},
@@ -25,7 +24,11 @@ define(function (require) {
 				{ Sifra: '005', Opis: 'Rafinerija Dubrovnik', Baza: 'Dubrovnik'}
 			]);
 			
-
+			setTimeout(function() { 
+				var htmlEncoded = htmlEncode($('[data-bind="grid: gridConfig"]').html());
+				$('.grid-example-html').html(htmlEncoded);
+			}, 1000);
+			
         };
         self.gridConfig = {
             data: ko.observableArray(),
@@ -49,9 +52,6 @@ define(function (require) {
             searchText: 'SearchWithPoints'
 		};
 		
-        self.close = function () {
-            //app.closeDialog(self);
-        };
 		
 		self.showData = function(data) {
 			alert(ko.toJSON(data));

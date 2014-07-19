@@ -71,13 +71,13 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
     var Grid = function (config) {
         var self = this;
 
-		var userHeaderTemplatesElement = null;//Ako je korisnik definirao template za headere
+		var userHeaderTemplatesElement = null;//Element sa template-ima za headere
 		var userHeaderTemplatesCache = {};
 		var userHeaderTemplatesStylesCache = {};
 		var userHeaderTemplatesClassesCache = {};
 		
 		
-        var userCellTemplatesElement = null;//Ako je korisnik definirao template za æelije
+        var userCellTemplatesElement = null;//Element sa template-ima za æelije
         var userCellTemplatesCache = {};
 		var userCellTemplatesStylesCache = {};
 		var userCellTemplatesClassesCache = {};
@@ -113,6 +113,20 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 			? config.selectedRows
 			: ko.observableArray(config.selectedRows !== undefined ? config.selectedRows : defaults.selectedRows);
         
+		self.selectedRows.subscribe(function(changes) {
+			if(!self.multiSelect && self.selectedRows().length > 1) {
+				for(var i = 0; i < changes.length; i++) {
+					var change = changes[i];
+					if(change.status == "added") {
+						setTimeout(function() {
+							self.selectedRows([change.value]);
+						}, 1);
+						break;
+					}
+				}
+			}
+		}, null, 'arrayChange');
+		
         self.pageText = ko.isObservable(config.pageText)
 			? config.pageText
 			: ko.observable(config.pageText !== undefined ? config.pageText : defaults.pageText);
