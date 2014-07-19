@@ -127,6 +127,17 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 			}
 		}, null, 'arrayChange');
 		
+		self.selectAllRows = function(val) {
+			setTimeout(function() {
+				if(val) {
+					self.selectedRows(self.allRows().slice(0));
+				}
+				else {
+					self.selectedRows([]);
+				}
+			}, 1);
+		};
+		
         self.pageText = ko.isObservable(config.pageText)
 			? config.pageText
 			: ko.observable(config.pageText !== undefined ? config.pageText : defaults.pageText);

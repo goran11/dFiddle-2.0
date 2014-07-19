@@ -1,4 +1,4 @@
-
+ï»¿
 <!--********************************************************************************************************************************-->
 <!--********************************************************************************************************************************-->
 <!--********************************************************************************************************************************-->
@@ -12,10 +12,10 @@
 	
 		<!-- Kako zamjeniti defaultni template headera, zajedno sa ikonom koja pokazuje sortiranost kolone -->
 		<script type="text/html" data-col="Sifra">
-				<div style="background-color: purple; padding: 10px">
-					<span style="border: 1px solid white; color: white; font-size: 18px;" data-bind="text: data"></span>
+				<div style="padding: 10px">
+					<span style="border: 1px solid black; font-size: 18px;" data-bind="text: data"></span>
 					<!-- ko if: column == grid.sortColumn() -->
-					<i class="fa fa-sort-desc" data-bind="css: { 'fa-sort-desc': grid.sortDesc(), 'fa-sort-asc': !grid.sortDesc() }"></i>
+					<i class="fa fa-pinterest fa-4x" data-bind="css: { 'fa-pinterest': grid.sortDesc(), 'fa-truck': !grid.sortDesc() }"></i>
 					<!-- /ko -->
 				</div>
 		</script>
@@ -25,32 +25,41 @@
 		
 		<!-- Postavlja samo stil na header, koristi se defaultni template -->
 		<script type="text/html" data-col="Baza" style="width: 100; text-align: right; padding-right: 50px;"></script>
+		
+		
+		<script type="text/html" data-col="__checked" style="width: 100px; text-align: center;">
+			<label>
+				<input type="checkbox" data-bind="click: function() { grid.selectAllRows($element.checked); return true; }, clickBubble: false" />
+				<span data-bind="text: 'OznaÄi sve'"></span>
+			</label>
+		</script>
+		
 	</div>
 
 
-	<!-- Definicije template-a za æelije -->
+	<!-- Definicije template-a za Ä‡elije -->
 	<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 	<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 	<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 	<div data-part="cell-templates">
 	
-		<!-- Definiran stil na samoj æeliji(td) i definiran template sadržaja æelije -->
+		<!-- Definiran stil na samoj Ä‡eliji(td) i definiran template sadrÅ¾aja Ä‡elije -->
 		<script type="text/html" data-col="Opis" style="width: 400px; text-align: left; padding-left: 30px;">
 			<span data-bind="text: data"></span>
 		</script>
 		
-		<!-- Ne definiramo sadržaj template-a (sadržaj script elementa je prazan što znaèi da æe se koristiti defaultni template),
-			 ali koristimo definiciju da bi postavili stil na æeliju (na isti naèin se može postaviti i css klasa) -->
+		<!-- Ne definiramo sadrÅ¾aj template-a (sadrÅ¾aj script elementa je prazan Å¡to znaÄi da Ä‡e se koristiti defaultni template),
+			 ali koristimo definiciju da bi postavili stil na Ä‡eliju (na isti naÄin se moÅ¾e postaviti i css klasa) -->
 		<script type="text/html" data-col="Baza" style="width: 100x; text-align: right; padding-right: 50px;"></script>
 		
-		<!-- Gumb/ikona prikazuje detalje retka na naèin da se databinda na trenutni viewmodel koji dobiva u obliku varijable "model"  -->
+		<!-- Gumb/ikona prikazuje detalje retka na naÄin da se databinda na trenutni viewmodel koji dobiva u obliku varijable "model"  -->
 		<script type="text/html" data-col="__details">
 			<input data-bind="click: function() { model.showData(row); }" 
 				type="image" style="width: 20px; height: 20px" 
 				src="http://findicons.com/icon/download/67001/gnome_text_x_generic/64/png" />
 		</script>
 		
-		<!-- Checkbox za selektiranje redaka, sa posebnim bindingom koji stavlja èitav entitet(redak) u niz "grid.selectedRows" -->
+		<!-- Checkbox za selektiranje redaka, sa posebnim bindingom koji stavlja Äitav entitet(redak) u niz "grid.selectedRows" -->
 		<script type="text/html" data-col="__checked" 
 				style="width: 100px; text-align: center;",
 				class="moja-klasa">
@@ -59,7 +68,7 @@
 		
 	</div>
 </div>
-<!--********************************************************************************************************************************-->
+<!--EndGrid********************************************************************************************************************************-->
 <!--********************************************************************************************************************************-->
 <!--********************************************************************************************************************************-->
 
@@ -71,9 +80,21 @@
 define(function (require) {
 
     var ko = require('knockout');
-
+	var $ = require('jquery');
+	
+	
+	function htmlEncode(html) {
+		return String(html)
+			.replace(/&/g, '&amp;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
+	}
+	
     var instanca = function () {
         var self = this;
+		
         self.activate = function (activationData) {
 			self.gridConfig.data([
 				{ Sifra: '001', Opis: 'Rafinerija Rijeka', Baza: 'Rijeka'},
@@ -83,7 +104,13 @@ define(function (require) {
 				{ Sifra: '005', Opis: 'Rafinerija Dubrovnik', Baza: 'Dubrovnik'}
 			]);
 			
-
+			require(['text!datagrid/grid/index.html'], function(text) {
+				text = text.substring(0, text.indexOf('EndGrid')-4);
+				var htmlEncoded = htmlEncode(text);
+				setTimeout(function() {
+					$('.grid-example-html').html(htmlEncoded);
+				}, 1000);
+			});
         };
         self.gridConfig = {
             data: ko.observableArray(),
@@ -91,12 +118,13 @@ define(function (require) {
             showPageSizeOptions: false,
             pageSizeOptions: [5, 10, 15],
             alwaysShowPaging: true,
+			multiSelect: true,
             columns: [
                 { header: 'Code', property: 'Sifra', canSearch: true, canSort: true, sort: function(a, b) { return a.Sifra < b.Sifra ? -1 : 1; } },
                 { header: 'Description', property: 'Opis', canSearch: true, canSort: true, sort: function (a, b) { return a.Opis < b.Opis ? -1 : 1; } },
                 { header: 'Base', property: 'Baza', canSearch: true, canSort: true, sort: function (a, b) { return a.Baza < b.Baza ? -1 : 1; } },
-				{ header: '', property: '__details' },
-				{ header: '', property: '__checked' }
+				{ header: '', property: '__details', canSort: false },
+				{ header: '', property: '__checked', canSort: false }
             ],
             rowClick: function(data) {
                 //app.closeDialog(self, data);
@@ -123,7 +151,6 @@ define(function (require) {
 <h4>HTML</h4>
 <code>
 <pre class="grid-example-html">
-
 
 </pre>
 </code>

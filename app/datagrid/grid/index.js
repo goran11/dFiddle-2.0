@@ -15,6 +15,7 @@ define(function (require) {
 	
     var instanca = function () {
         var self = this;
+		
         self.activate = function (activationData) {
 			self.gridConfig.data([
 				{ Sifra: '001', Opis: 'Rafinerija Rijeka', Baza: 'Rijeka'},
@@ -24,11 +25,13 @@ define(function (require) {
 				{ Sifra: '005', Opis: 'Rafinerija Dubrovnik', Baza: 'Dubrovnik'}
 			]);
 			
-			setTimeout(function() { 
-				var htmlEncoded = htmlEncode($('[data-bind="grid: gridConfig"]').html());
-				$('.grid-example-html').html(htmlEncoded);
-			}, 1000);
-			
+			require(['text!datagrid/grid/index.html'], function(text) {
+				text = text.substring(0, text.indexOf('EndGrid') - 4);
+				var htmlEncoded = htmlEncode(text);
+				setTimeout(function() {
+					$('.grid-example-html').html(htmlEncoded);
+				}, 1000);
+			});
         };
         self.gridConfig = {
             data: ko.observableArray(),
@@ -36,12 +39,13 @@ define(function (require) {
             showPageSizeOptions: false,
             pageSizeOptions: [5, 10, 15],
             alwaysShowPaging: true,
+			multiSelect: true,
             columns: [
                 { header: 'Code', property: 'Sifra', canSearch: true, canSort: true, sort: function(a, b) { return a.Sifra < b.Sifra ? -1 : 1; } },
                 { header: 'Description', property: 'Opis', canSearch: true, canSort: true, sort: function (a, b) { return a.Opis < b.Opis ? -1 : 1; } },
                 { header: 'Base', property: 'Baza', canSearch: true, canSort: true, sort: function (a, b) { return a.Baza < b.Baza ? -1 : 1; } },
-				{ header: '', property: '__details' },
-				{ header: '', property: '__checked' }
+				{ header: '', property: '__details', canSort: false },
+				{ header: '', property: '__checked', canSort: false }
             ],
             rowClick: function(data) {
                 //app.closeDialog(self, data);
