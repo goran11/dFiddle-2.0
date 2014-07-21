@@ -4,7 +4,8 @@ define(['plugins/router', 'durandal/system', 'global', 'knockout'], function( ro
           moduleId: 'datagrid',
           route: 'datagrid'
       }).map([
-          {route: ['', 'grid'], moduleId: 'grid/index', title: 'Data Grid', type: 'intro', nav: true}
+          {route: ['', 'grid'], moduleId: 'grid/index', title: 'Data Grid', type: 'intro', nav: true},
+		  {route: ['grid2', 'grid2'], moduleId: 'grid2/index', title: 'Data Grid 2', type: 'intro', nav: true, hash: '#datagrid/grid2'}
       ]).buildNavigationModel();
       
     // .on is mixed in an not meant to be  chainable 

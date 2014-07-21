@@ -134,6 +134,16 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//***********************************************************************
 		//Selection node-a-------------------------------------------------------
 		//***********************************************************************
+		self.select = function(node) {
+			var index = self.selectedNodes().indexOf(node);
+			if(index == -1) {
+				self.selectedNodes.push(node);
+			}
+			else {
+				self.selectedNodes.remove(node);
+			}
+		} 
+		
 		self.isSelected = function(node) {
 			return self.selectedNodes().indexOf(node) > -1;
 		};

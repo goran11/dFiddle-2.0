@@ -9,8 +9,8 @@
 
 		<!-- ko if: node.expanded() -->
 			<!-- ko template : { if: node.nodes().length > 0, afterRender: treeview.slide } -->
-				<ul class="slideup"  data-bind="foreach: treeview.nodes">
-					<!-- ko template: { name: treeview.renderTemplate, data: { treeview: $parent.treeview, data: $data } } -->
+				<ul class="slideup"  data-bind="foreach: node.nodes">
+					<!-- ko template: { name: $parent.treeview.renderTemplate, data: { treeview: $parent.treeview, node: $data } } -->
 					<!-- /ko -->
 				</ul>
 			<!-- /ko -->
@@ -25,7 +25,7 @@
 
 <div class="css-treeview">
     <ul data-bind="foreach: nodes">
-		<!-- ko template: { name: treeview.renderTemplate, data: { treeview: $parent, node: $data } } -->
+		<!-- ko template: { name: $parent.renderTemplate, data: { treeview: $parent, node: $data } } -->
 		<!-- /ko -->
 	</ul>
 </div>

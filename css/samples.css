@@ -71,6 +71,132 @@ input.invalid { border: 1px solid red !important; background-color: #FFAAAA !imp
     font-weight: bold;
 }
 
+/*----------------TreeView-----------------------------*/
+
+.css-treeview ul,
+.css-treeview li
+{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.css-treeview input
+{
+    position: absolute;
+    opacity: 0;
+}
+
+ .css-treeview
+{
+    font: normal 11px "Segoe UI", Arial, Sans-serif;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.css-treeview label + ul
+{
+    margin: 0 0 0 22px;
+}
+
+.css-treeview label span,
+.css-treeview label span::before
+{
+    cursor: pointer;
+}
+
+.css-treeview input:disabled + span
+{
+    cursor: default;
+    opacity: .6;
+}
+
+.css-treeview input:checked:not(:disabled) ~ ul
+{
+    display: block;
+}
+
+.css-treeview span,
+.css-treeview span::before
+{
+    background: url("http://experiments.wemakesites.net/pages/css3-treeview/example/icons.png") no-repeat;
+}
+
+
+.css-treeview span,
+.css-treeview span::before
+{
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+}
+
+.css-treeview span
+{
+    background-position: 18px 0;
+}
+
+.css-treeview span::before
+{
+    content: "";
+    width: 16px;
+    margin: 0 22px 0 0;
+    vertical-align: middle;
+    background-position: 0 -32px;
+}
+
+.css-treeview input:checked + span::before
+{
+    background-position: 0 -16px;
+}
+
+
+@media screen and (-webkit-min-device-pixel-ratio:0)
+{
+    .css-treeview 
+    {
+        -webkit-animation: webkit-adjacent-element-selector-bugfix infinite 1s;
+    }
+ 
+    @-webkit-keyframes webkit-adjacent-element-selector-bugfix 
+    {
+        from 
+        { 
+            padding: 0;
+        } 
+        to 
+        { 
+            padding: 0;
+        }
+  
+     }
+}
+
+
+.css-treeview ul {
+     overflow-y: hidden;
+    -webkit-transition: max-height 1s ease-in-out;
+    -moz-transition: max-height 1s ease-in-out;
+    -o-transition: max-height 1s ease-in-out;
+    transition: max-height 1s ease-in-out;
+    
+}
+.slideup, .slidedown {
+    max-height: 0;            
+
+}
+.slidedown {            
+    max-height: 20000px ;   
+} 
+
+.css-treeview li.selected > label {
+    font-weight: bold;
+	color: red;
+}
+
+
 
 
 
