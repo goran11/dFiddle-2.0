@@ -27,7 +27,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'services/Bcc
         router: true,
         dialog: true,
         widget: {
-            kinds: ['expander', 'grid']
+            kinds: ['expander', 'grid', 'treeview']
         }
     });
 

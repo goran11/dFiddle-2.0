@@ -22,7 +22,8 @@
                 { route: 'knockout-samples*details', hash: '#knockout-samples', moduleId: 'ko/index', title: 'Knockout Samples', nav: true },
                 { route: 'extras*details', hash: '#extras', moduleId: 'extras/index', title: 'Extras', nav: true,  admin: true  },
                 { route: 'so*details', hash: '#so', moduleId: 'so/index', title: 'so', nav: true },
-				{ route: 'datagrid*details', hash: '#datagrid', moduleId: 'datagrid/index', title: 'datagrid', nav: true }
+				{ route: 'datagrid*details', hash: '#datagrid', moduleId: 'datagrid/index', title: 'datagrid', nav: true },
+				{ route: 'treeview*details', hash: '#treeview', moduleId: 'treeview/index', title: 'treeview', nav: true }
             ]).buildNavigationModel();
 
             return router.activate();
