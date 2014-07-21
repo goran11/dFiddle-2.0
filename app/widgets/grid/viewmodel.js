@@ -539,7 +539,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
         self.activate = function (config) {
             //I do this because of the funky things that happen when constructing the grid
             //before you have the observable's you are actually using
-            $.extend(self, new Grid(config));
+            //$.extend(self, new Grid(config));
+			Grid.call(self, config);
         };
     };
 });
