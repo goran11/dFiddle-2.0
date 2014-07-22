@@ -3,6 +3,27 @@
 <div data-bind="treeview: { data: Containers, 
 							identifierProperty: 'id',
 							textProperty: 'name',
-							multiSelect: true,
+							multiSelect: false,
 							loadFunction: loadChildContainers,
-							loadOnDemand: true }"></div>
+							loadOnDemand: true }">
+							
+	
+	<div data-part="treeview-container">
+		<ul data-bind="foreach: nodes" style="list-style: none; color: darkgreen">
+			<!-- ko template: { name: $parent.nodeCotainerTemplate, data: { treeview: $parent, node: $data } } -->
+			<!-- /ko -->
+		</ul>
+	</div>
+	
+	<script data-part="node-header-template" type="text/html">
+		<span data-bind="style: { color: treeview.isSelected(node) ? 'limegreen' : 'darkgreen' }">
+			<i class="fa fa-cog fa-spin" data-bind="visible: node.isLoading"></i>
+			<label>
+				<input type="checkbox" style="position: absolute; opacity: 0" data-bind="checked: node.expanded, disable: node.disabled, enable: !node.isLoading()" />
+				<i class="fa fa-angle-right" data-bind="visible: !node.expanded()"></i>
+				<i class="fa fa-angle-down" data-bind="visible: node.expanded"></i>
+				<span data-bind="text: node.text, click: function() { treeview.select(node); }"></span>
+			</label>
+		</span>
+	</script>
+</div>

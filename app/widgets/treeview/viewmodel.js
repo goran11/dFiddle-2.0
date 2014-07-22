@@ -22,6 +22,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		
 		self.text = text;//Tekst node-a
 		self.data = data;
+		self.isLoading = ko.observable(false);
 		self.loaded = false;//Flag da li je Node uèitan - bitno kod "loadOnDemand" opcije TreeView-a
 		self.disabled = ko.observable(disabled !== undefined ? disabled: false);//Da li je node disable-an
 		
@@ -50,14 +51,21 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 						_expanded(true);
 					}
 					else if (result && result.then){
-						result.then(function(children) {//Promise - Lazy load child nodova
-							self.loaded = true;
-							_expanded(true);
-							self.children = children;
-							if(children) {
-								self.nodes(self.treeview.generateNodes(children));
-							}
-						});
+						self.isLoading(true);
+						setTimeout(function() {//Postavljamo expanded false u timeout-u jer ne možemo u obradi
+							_expanded(false);
+							result.then(function(children) {//Promise - Lazy load child nodova
+								self.isLoading(false);
+								self.loaded = true;
+								_expanded(true);
+								self.children = children;
+								if(children) {
+									self.nodes(self.treeview.generateNodes(children));
+								}
+							});
+						
+						}, 1);
+
 					}
 				}
 			},
@@ -79,9 +87,12 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		self.loadFunction = config.loadFunction;
 		
 		self.data = config.data;
+		self.selectedData = config.selectedData;
 		self.nodes = ko.observableArray([]);
-		self.renderTemplate = null;//Template za renderiranje Node-ova
 		
+		//Templates
+		self.nodeCotainerTemplate = null;//Template za renderiranje èitave Node strukture: Tekst + children
+		self.nodeHeaderTemplate = null;//Template za renderiranje header-a noda
 		
 		//***********************************************************************
 		//Generating nodes-------------------------------------------------------
@@ -190,7 +201,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//Template---------------------------------------------------------------
 		//***********************************************************************
 		self.binding = function (child, parent, settings) {
-			self.renderTemplate = $($(child).find('[data-widget-template-id="node-template"]')[0]).html();
+			self.nodeCotainerTemplate = $($(child).find('[data-part="node-container-template"]')[0]).html();
+			self.nodeHeaderTemplate = $($(child).find('[data-part="node-header-template"]')[0]).html();
         };
 		
 		
