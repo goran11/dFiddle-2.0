@@ -21,6 +21,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		self.treeview = treeview;
 		
 		self.text = text;//Tekst node-a
+		self.data = data;
 		self.loaded = false;//Flag da li je Node uèitan - bitno kod "loadOnDemand" opcije TreeView-a
 		self.disabled = ko.observable(disabled !== undefined ? disabled: false);//Da li je node disable-an
 		
@@ -35,24 +36,27 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//***********************************************************************
 		var _expanded = ko.observable(false);
 		self.expanded = ko.computed({
-			 read: function () {
-				return _expanded;
+			read: function () {
+				return _expanded();
 			},
 			write: function (value) {
 				if(self.loaded) {//Ako je Node uèitan
 					_expanded(value);
 				}
 				else if (value) {//Ako Node nije uèitan, a treeview nam je vratio "true" (ako je èitav treeview definiran)
-					var result = self.treeview.expandNode(self);
+					var result = self.treeview.checkExpand(self);
 					if(result === true) {
-						_expanded(true);
 						self.loaded = true;
+						_expanded(true);
 					}
 					else if (result && result.then){
 						result.then(function(children) {//Promise - Lazy load child nodova
-							self.nodes(children);
-							_expanded(true);
 							self.loaded = true;
+							_expanded(true);
+							self.children = children;
+							if(children) {
+								self.nodes(self.treeview.generateNodes(children));
+							}
 						});
 					}
 				}
@@ -64,6 +68,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 	
     function TreeView(config) {
         var self = this;
+		
 		self.identifierProperty = config.identifierProperty ? config.identifierProperty : null;
 		self.textProperty = config.textProperty ? config.textProperty : null;
 		self.childrenProperty = config.childrenProperty ? config.childrenProperty : null;
@@ -71,6 +76,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		
 		self.multiSelect = config.multiSelect !== undefined ? config.multiSelect : defaults.multiSelect;
 		self.loadOnDemand = config.loadOnDemand !== undefined ? config.loadOnDemand : defaults.loadOnDemand;
+		self.loadFunction = config.loadFunction;
 		
 		self.data = config.data;
 		self.nodes = ko.observableArray([]);
@@ -86,28 +92,28 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 					for(var i = 0; i < changes.length; i++) {
 						var change = changes[i];
 						if(change.status == "added") {
-							self.nodes.push(self.GenerateNode(change.value));
+							self.nodes.push(self.generateNode(change.value));
 						}
 					}
 				}
 			}, null, 'arrayChange');
 		}
 		
-		function generateNodes(nodesData) {
+		self.generateNodes = function(nodesData) {
 			if(!nodesData) return null;
 			var nodes = [];
 			var arr = ko.isObservable(nodesData) ? nodesData() : nodesData;
 			for(var i = 0; i < arr.length; i++) {
 				var dataEntity = arr[i];
-				nodes.push(generateNode(dataEntity));
+				nodes.push(self.generateNode(dataEntity));
 			}
 			return nodes;
-		}
+		};
 		
-		function generateNode(data) {
+		self.generateNode = function(data) {
 			var childNodes = null;
 			if(self.childrenProperty) {
-				childNodes = generateNodes(data[self.childrenProperty]);
+				childNodes = self.generateNodes(data[self.childrenProperty]);
 			}
 			
 			var node = new Node(self, 
@@ -118,7 +124,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 								);
 								
 			return node;
-		}
+		};
 
 		
 		
@@ -126,7 +132,12 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//Expanding nodes-------------------------------------------------------
 		//***********************************************************************
 		self.checkExpand = function(node) {
-			return true;
+			if(!self.loadOnDemand) {
+				return true;
+			}
+			else {
+				return self.loadFunction(node.data, node);
+			}
 		};
 		
 
@@ -187,8 +198,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//***********************************************************************
 		//Na kraju pozovi generiranje nodova-------------------------------------
 		//***********************************************************************
-		self.nodes(generateNodes(self.data));
-	};
+		self.nodes(self.generateNodes(self.data));
+	}
 
 	
 	
@@ -199,7 +210,9 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
             //I do this because of the funky things that happen when constructing the grid
             //before you have the observable's you are actually using
             //$.extend(self, new TreeView(config));
-			TreeView.call(self, config);
+			if(!self.initialised) { 
+				TreeView.call(self, config); 
+			}
         };
     };
 });

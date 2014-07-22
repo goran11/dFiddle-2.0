@@ -3,7 +3,7 @@
 	
 	<li data-bind="css: { 'selected': treeview.isSelected(node) }">
 		<label>
-			<input type="checkbox" data-bind="checked: node.expanded(), disable: node.disabled" />
+			<input type="checkbox" data-bind="checked: node.expanded, disable: node.disabled" />
 			<span data-bind="text: node.text, click: function() { treeview.select(node); }"></span>
 		</label>
 

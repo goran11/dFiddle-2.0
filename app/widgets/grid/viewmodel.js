@@ -59,7 +59,6 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
         pageSizeOptions: [25, 50, 75, 100],
         alwaysShowPaging: false,
         showPageSizeOptions: false,
-        selectedRows: [],
         selectRowOnClick: true,
         multiSelect: false,
         identifierProperty: '',
@@ -81,7 +80,6 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
         var userCellTemplatesCache = {};
 		var userCellTemplatesStylesCache = {};
 		var userCellTemplatesClassesCache = {};
-		
 		
 
 		
@@ -111,7 +109,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 
         self.selectedRows = ko.isObservable(config.selectedRows)
 			? config.selectedRows
-			: ko.observableArray(config.selectedRows !== undefined ? config.selectedRows : defaults.selectedRows);
+			: ko.observableArray(config.selectedRows !== undefined ? config.selectedRows : []);
         
 		self.selectedRows.subscribe(function(changes) {
 			if(!self.multiSelect && self.selectedRows().length > 1) {

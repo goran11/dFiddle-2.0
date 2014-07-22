@@ -15,6 +15,7 @@ define(function (require) {
 	
     var instanca = function () {
         var self = this;
+		self.cacheViews = true;
 		
 		self.Containers = ko.observableArray([]);
 		
@@ -205,9 +206,8 @@ define(function (require) {
 		*/
 		
 		
-		
     };
 
-    return instanca;
+    return new instanca();
 
 });
