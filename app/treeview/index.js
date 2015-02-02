@@ -5,7 +5,8 @@ define(['plugins/router', 'durandal/system', 'global', 'knockout'], function( ro
           route: 'treeview'
       }).map([
           {route: ['', 'tree'], moduleId: 'tree/index', title: 'Tree view', type: 'intro', nav: true},
-		  {route: ['tree2', 'tree2'], moduleId: 'tree2/index', title: 'Tree view 2', type: 'intro', nav: true, hash: '#treeview/tree2'}
+		  {route: ['tree2', 'tree2'], moduleId: 'tree2/index', title: 'Tree view 2', type: 'intro', nav: true, hash: '#treeview/tree2'},
+		  {route: ['tree3', 'tree3'], moduleId: 'tree3/index', title: 'Tree view 3', type: 'intro', nav: true, hash: '#treeview/tree3'}
       ]).buildNavigationModel();
       
     // .on is mixed in an not meant to be  chainable 

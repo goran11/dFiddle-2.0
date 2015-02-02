@@ -21,7 +21,7 @@ define(function (require) {
 		
         self.activate = function (activationData) {
 		
-			self.Containers = ([
+			self.Containers([
 				{ id: 1, name: 'Container 1' },
 				{ id: 2, name: 'Container 2' }
 			]);
@@ -36,31 +36,7 @@ define(function (require) {
 				}, 1000);
 			});*/
         };
-		/*
-        self.gridConfig = {
-            data: ko.observableArray(),
-            pageSize: 10,
-            showPageSizeOptions: false,
-            pageSizeOptions: [5, 10, 15],
-            alwaysShowPaging: true,
-			multiSelect: true,
-            columns: [
-                { header: 'Code', property: 'Sifra', canSearch: true, canSort: true, sort: function(a, b) { return a.Sifra < b.Sifra ? -1 : 1; } },
-                { header: 'Description', property: 'Opis', canSearch: true, canSort: true, sort: function (a, b) { return a.Opis < b.Opis ? -1 : 1; } },
-                { header: 'Base', property: 'Baza', canSearch: true, canSort: true, sort: function (a, b) { return a.Baza < b.Baza ? -1 : 1; } },
-				{ header: '', property: '__details', canSort: false },
-				{ header: '', property: '__checked', canSort: false }
-            ],
-            rowClick: function(data) {
-                //app.closeDialog(self, data);
-            },
-            identifierProperty: "Sifra",
-            pageText: "Page",
-            ofText: 'of',
-            searchText: 'SearchWithPoints'
-		};
-		*/
-		
+
 		self.loadChildContainers = function(container, node) {
 			//Simulacija Ajax promise-a
 			 var promise = $.Deferred();

@@ -16,7 +16,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
     };
 
 	
-	function Node(treeview, text, data, children, disabled) {
+	function Node(treeview, text, data, children, disabled, exp) {
 		var self = this;
 		self.treeview = treeview;
 		
@@ -35,13 +35,14 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//***********************************************************************
 		//Expand node-a----------------------------------------------------------
 		//***********************************************************************
-		var _expanded = ko.observable(false);
+		var _expanded = ko.isObservable(exp) ? exp: (exp === true || exp === false ? ko.observable(exp) : ko.observable(false));
+		//var _expanded = ko.observable(false);
 		self.expanded = ko.computed({
 			read: function () {
 				return _expanded();
 			},
 			write: function (value) {
-				if(self.loaded) {//Ako je Node uèitan
+				if(!treeview.loadOnDemand || self.loaded) {//Ako je Node uèitan
 					_expanded(value);
 				}
 				else if (value) {//Ako Node nije uèitan, a treeview nam je vratio "true" (ako je èitav treeview definiran)
@@ -79,6 +80,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		
 		self.identifierProperty = config.identifierProperty ? config.identifierProperty : null;
 		self.textProperty = config.textProperty ? config.textProperty : null;
+		self.expandedProperty = config.expandedProperty ? config.expandedProperty : '__non_existing_property_';
 		self.childrenProperty = config.childrenProperty ? config.childrenProperty : null;
 		self.disabledProperty = config.disabledProperty ? config.disabledProperty : null;
 		
@@ -131,7 +133,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 								data[self.textProperty],
 								data,
 								childNodes,
-								self.disabledProperty ? data[self.disabledProperty]: false
+								self.disabledProperty ? data[self.disabledProperty]: false,
+								data[self.expandedProperty]
 								);
 								
 			return node;

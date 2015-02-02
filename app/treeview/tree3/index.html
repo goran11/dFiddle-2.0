@@ -1,9 +1,9 @@
 ﻿<div>
 	<label>
-		<span>Container name</span>
-		<input type="text" data-bind="value: newContainerName" />
+		<span>Pronađi nodove</span>
+		<input type="text" data-bind="value: searchText" />
 	</label>
-	<button data-bind="click: addNewContainer">Dodaj</button>
+	<button data-bind="click: search">Traži</button>
 </div>
 
 <div data-bind="treeview: { data: Containers, 
@@ -12,4 +12,5 @@
 							textProperty: 'name',
 							childrenProperty: 'Containers',
 							multiSelect: false,
+							expandedProperty: 'expanded',
 							loadOnDemand: false }"></div>
