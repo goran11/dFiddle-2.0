@@ -53,20 +53,15 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 					}
 					else if (result && result.then){
 						self.isLoading(true);
-						setTimeout(function() {//Postavljamo expanded false u timeout-u jer ne možemo u obradi
-							_expanded(false);
-							result.then(function(children) {//Promise - Lazy load child nodova
-								self.isLoading(false);
-								self.loaded = true;
-								_expanded(true);
-								self.children = children;
-								if(children) {
-									self.nodes(self.treeview.generateNodes(children));
-								}
-							});
-						
-						}, 1);
-
+						result.then(function(children) {//Promise - Lazy load child nodova
+							self.isLoading(false);
+							self.loaded = true;
+							_expanded(true);
+							self.children = children;
+							if(children) {
+								self.nodes(self.treeview.generateNodes(children));
+							}
+						});
 					}
 				}
 			},
@@ -95,6 +90,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//Templates
 		self.nodeCotainerTemplate = null;//Template za renderiranje èitave Node strukture: Tekst + children
 		self.nodeHeaderTemplate = null;//Template za renderiranje header-a noda
+		
+		
 		
 		//***********************************************************************
 		//Generating nodes-------------------------------------------------------

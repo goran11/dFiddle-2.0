@@ -12,12 +12,12 @@
 	
 		<!-- Kako zamjeniti defaultni template headera, zajedno sa ikonom koja pokazuje sortiranost kolone -->
 		<script type="text/html" data-col="Sifra">
-				<div style="padding: 10px">
-					<span style="border: 1px solid black; font-size: 18px;" data-bind="text: data"></span>
-					<!-- ko if: column == grid.sortColumn() -->
-					<i class="fa fa-pinterest fa-4x" data-bind="css: { 'fa-pinterest': grid.sortDesc(), 'fa-truck': !grid.sortDesc() }"></i>
-					<!-- /ko -->
-				</div>
+			<div style="padding: 10px">
+				<span style="border: 1px solid black; font-size: 18px;" data-bind="text: data"></span>
+				<!-- ko if: column == grid.sortColumn() -->
+				<i class="fa fa-pinterest fa-4x" data-bind="css: { 'fa-pinterest': grid.sortDesc(), 'fa-truck': !grid.sortDesc() }"></i>
+				<!-- /ko -->
+			</div>
 		</script>
 		
 		<!-- Postavlja samo stil na header, koristi se defaultni template -->
