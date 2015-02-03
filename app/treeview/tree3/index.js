@@ -36,10 +36,7 @@ define(function (require) {
 		self.Containers = ko.observableArray([]);
 		
         self.activate = function (activationData) {
-		
-			var arr = [];
-			generateContainers(arr, 2, 9);
-			self.Containers(arr);
+			console.log('treeview3 activate');
 			/*
 			require(['text!datagrid/grid/index.html'], function(text) {
 				text = text.substring(0, text.indexOf('EndGrid') - 4);
@@ -51,11 +48,21 @@ define(function (require) {
         };
 
 		
+		var arr = [];
+		generateContainers(arr, 2, 9);
+		self.Containers(arr);
+		
+		
 		self.selectedContainers = ko.observableArray([]);
 		self.searchText = ko.observable('');
 		self.search = function() {
 			var arr = self.Containers();//
 			self.traverse(arr);
+		};
+		
+		self.collapseAll = function() {
+			var arr = self.Containers();//
+			self.collapseHierarchy(arr);
 		};
 		
 		self.traverse = function(arr) {
@@ -72,7 +79,7 @@ define(function (require) {
 				}
 			}
 			return retValue;
-		}
+		};
 		
 		self.findInDirectChildren = function(parentContainer) {
 			var arr = parentContainer.Containers;
@@ -85,7 +92,16 @@ define(function (require) {
 			}
 			return expandParent;
 		};
-    };
+    
+		self.collapseHierarchy = function(arr) {
+			for(var i = 0; i < arr.length; i++) {
+				var cont = arr[i];
+				cont.expanded(false);
+				self.collapseHierarchy(cont.Containers);
+			}
+		};
+	
+	};
 
     return new instanca();
 

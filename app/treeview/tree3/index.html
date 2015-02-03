@@ -4,6 +4,7 @@
 		<input type="text" data-bind="value: searchText" />
 	</label>
 	<button data-bind="click: search">Traži</button>
+	<button data-bind="click: collapseAll">Zatvori sve</button>
 </div>
 
 <div data-bind="treeview: { data: Containers, 
@@ -13,4 +14,19 @@
 							childrenProperty: 'Containers',
 							multiSelect: false,
 							expandedProperty: 'expanded',
-							loadOnDemand: false }"></div>
+							loadOnDemand: false }">
+
+	<script data-part="node-container-template" type="text/html">
+		<li data-bind="css: { 'selected': treeview.isSelected(node) }">
+
+			<!-- ko template : { name: treeview.nodeHeaderTemplate } -->
+			<!-- /ko -->
+			<ul data-bind="visible: node.expanded, foreach: node.nodes">
+				<!-- ko template: { name: $parent.treeview.nodeCotainerTemplate, data: { treeview: $parent.treeview, node: $data } } -->
+				<!-- /ko -->
+			</ul>
+		</li>
+	</script>
+
+							
+</div>
